@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-#2
+''' Especially useful for screens with
+Pulse-Width Modulation (PWM) as xrandr dimming is not PWM '''
+
 import tkinter
 import subprocess
 import os
@@ -14,30 +16,46 @@ class Redshift:
             self.data = Default()
 
     def change(self, key):
-        if key.keysym in ('b', 'k'):
-            self.data.brightness = self.data.brightness + 3 
-            if self.data.brightness > 100:
-                self.data.brightness = 100
-        elif key.keysym in ('d', 'j'):
-            self.data.brightness = self.data.brightness - 3 
-        elif key.keysym in ('w', 'h'):
-            self.data.temperature = self.data.temperature - 100
-        elif key.keysym in ('c', 'l'):
-            self.data.temperature = self.data.temperature + 100
-        elif key.keysym in ('r'):
+        char = key.keysym
+        if char in 'bk':
+            self.increase_brightness()
+        elif char in 'dj':
+            self.decrease_brightness()
+        elif char in 'wh':
+            self.increase_temperature()
+        elif char in 'cl':
+            self.decrease_temperature()
+        elif char in 'r':
             subprocess.run(['redshift', '-x'])
             return
-        elif key.keysym in ('1', 'o', 'f'):
-            self.data.brightness = 100 
-        elif key.keysym == 'Escape':
+        elif char in ('1of'):
+            self.data.brightness = 100
+        elif char == 'Escape':
             self.remember()
             root.destroy()
             return
         else:
             return
+        self.apply_changes()
+
+    def apply_changes(self):
         subprocess.run(['redshift',
-             '-O', str(self.data.temperature),
-             '-b', str(self.data.brightness /100)])
+                        '-O', str(self.data.temperature),
+                        '-b', str(self.data.brightness /100)])
+
+    def decrease_brightness(self):
+        self.data.brightness = self.data.brightness - 3
+
+    def increase_brightness(self):
+        self.data.brightness = self.data.brightness + 3
+        if self.data.brightness > 100:
+             self.data.brightness = 100
+
+    def decrease_temperature(self):
+        self.data.temperature = self.data.temperature - 100
+
+    def increase_temperature(self):
+        self.data.temperature = self.data.temperature + 100
 
     def remember(self):
         with open(get_absolute_path('pickle_file'), 'wb') as pickle_file:
