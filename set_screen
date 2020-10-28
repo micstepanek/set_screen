@@ -21,9 +21,9 @@ class Redshift:
         elif char in 'dj':
             self.decrease_brightness()
         elif char in 'wh':
-            self.increase_temperature()
-        elif char in 'cl':
             self.decrease_temperature()
+        elif char in 'cl':
+            self.increase_temperature()
         elif char in 'i':
             self.invert_colors()
             return
@@ -57,9 +57,13 @@ class Redshift:
             self.data.brightness = 100
 
     def decrease_temperature(self):
+        # make more red
+        # https://en.wikipedia.org/wiki/Color_temperature
         self.data.temperature = self.data.temperature - 100
 
     def increase_temperature(self):
+        # make more blue
+        # https://en.wikipedia.org/wiki/Color_temperature
         self.data.temperature = self.data.temperature + 100
 
     def remember(self):
