@@ -6,7 +6,7 @@ import os
 import pickle
 
      
-class Redshift:
+class Logic:
     def __init__(self):
         try:
             with open(get_absolute_path('pickle_file'), 'rb') as pickle_file:
@@ -14,7 +14,7 @@ class Redshift:
         except (FileNotFoundError, EOFError):
             self.data = Default()
 
-    def change(self, key):
+    def handle_key(self, key):
         char = key.keysym
         if char in 'bk':
             self.increase_brightness()
@@ -72,7 +72,7 @@ class Redshift:
 
 
 def get_absolute_path(relative_path):
-    this_file_path = os.path.realpath(__file__) 
+    this_file_path = os.path.realpath(__file__)
     this_file_directory = os.path.dirname(this_file_path)
     absolute_path = os.path.join(this_file_directory, relative_path)
     return absolute_path
@@ -98,9 +98,9 @@ class Default:
  
 
 root = tkinter.Tk()
-rs = Redshift()
-root.bind('<Key>', rs.change)
-root.title('screen')
+logic = Logic()
+root.bind('<Key>', logic.handle_key)
+root.title('set_screen')
 root.attributes('-type', 'dialog')
-h = Hints()
+hints = Hints()
 root.mainloop()
